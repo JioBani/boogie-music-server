@@ -6,29 +6,41 @@ import { UpdateAlbumDto } from './dto/update-album.dto';
 @Controller('albums')
 export class AlbumsController {
   constructor(private readonly albumsService: AlbumsService) {}
+  
+  //#. getAll
+  @Get()
+  getAll() {
+    return this.albumsService.getAll();
+  }
 
+  //#. findById
+  @Get(':id')
+  findbyId(@Param('id') id: string) {
+    return this.albumsService.findById(+id);
+  }
+
+  //#. findById
+  @Get('extend/:id')
+  findExtendbyId(@Param('id') id: string) {
+    return this.albumsService.findExtendById(+id);
+  }
+
+  //#. create
   @Post()
   create(@Body() createAlbumDto: CreateAlbumDto) {
     return this.albumsService.create(createAlbumDto);
   }
 
-  @Get()
-  findAll() {
-    return this.albumsService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.albumsService.findOne(+id);
-  }
-
+  //#. update
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateAlbumDto: UpdateAlbumDto) {
     return this.albumsService.update(+id, updateAlbumDto);
   }
 
+  //#. delete
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.albumsService.remove(+id);
-  }
+  }  
+  
 }

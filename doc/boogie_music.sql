@@ -27,6 +27,10 @@ SET time_zone = "+00:00";
 -- 테이블 구조 `album`
 --
 
+CREATE DATABASE boogie_music;
+
+use DATABASE boogie_music;
+
 CREATE TABLE `album` (
   `album_id` int(11) NOT NULL,
   `album_title` varchar(256) NOT NULL,
@@ -49,7 +53,7 @@ INSERT INTO `album` (`album_id`, `album_title`, `album_image_url`) VALUES
 --
 
 CREATE TABLE `artist` (
-  `artist_id` int(11) NOT NULL AUTO_INCREMENT,
+  `artist_id` int(11) NOT NULL,
   `artist_name` varchar(256) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
@@ -139,7 +143,7 @@ INSERT INTO `music_artist` (`music_id`, `artist_id`) VALUES
 
 CREATE TABLE `now_play` (
   `user_id` varchar(256) NOT NULL,
-  `now_order` int(11) NOT NULL,
+  `play_time` BIGINT NOT NULL,
   `music_id` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
@@ -147,31 +151,14 @@ CREATE TABLE `now_play` (
 -- 테이블의 덤프 데이터 `now_play`
 --
 
-INSERT INTO `now_play` (`user_id`, `now_order`, `music_id`) VALUES
-('user01', 1, 1),
-('user01', 7, 1),
-('user01', 8, 1),
-('user01', 17, 1),
-('user01', 18, 1),
-('user01', 24, 1),
-('user01', 2, 3),
-('user01', 9, 3),
-('user01', 10, 3),
-('user01', 11, 3),
-('user01', 12, 3),
-('user01', 13, 3),
-('user01', 14, 3),
-('user01', 15, 3),
-('user01', 16, 3),
-('user01', 19, 3),
-('user01', 20, 3),
-('user01', 21, 3),
-('user01', 22, 3),
-('user01', 23, 3),
-('user01', 6, 4),
-('user01', 3, 5),
-('user01', 5, 6),
-('user01', 4, 9);
+
+INSERT INTO `now_play` (`user_id`, `play_time`, `music_id`) VALUES
+('user01', 1617181819, 1),
+('user01', 1617181820, 2),
+('user01', 1617181821, 3),
+('user01', 1617181822, 4),
+('user01', 1617181823, 5);
+
 
 -- --------------------------------------------------------
 
@@ -333,7 +320,7 @@ ALTER TABLE `music_artist`
 -- 테이블의 인덱스 `now_play`
 --
 ALTER TABLE `now_play`
-  ADD PRIMARY KEY (`user_id`,`now_order`),
+  ADD PRIMARY KEY (`user_id`,`play_time`),
   ADD KEY `fk_now_play_music` (`music_id`);
 
 --
@@ -419,46 +406,48 @@ ALTER TABLE `playlist`
 -- 테이블의 제약사항 `music`
 --
 ALTER TABLE `music`
-  ADD CONSTRAINT `fk_music_album` FOREIGN KEY (`album_id`) REFERENCES `album` (`album_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_music_album` FOREIGN KEY (`album_id`) REFERENCES `album` (`album_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 --
 -- 테이블의 제약사항 `music_artist`
 --
 ALTER TABLE `music_artist`
-  ADD CONSTRAINT `fk_music_artist_artist1` FOREIGN KEY (`artist_id`) REFERENCES `artist` (`artist_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_music_artist_music1` FOREIGN KEY (`music_id`) REFERENCES `music` (`music_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_music_artist_artist1` FOREIGN KEY (`artist_id`) REFERENCES `artist` (`artist_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_music_artist_music1` FOREIGN KEY (`music_id`) REFERENCES `music` (`music_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 --
 -- 테이블의 제약사항 `now_play`
 --
+
+
 ALTER TABLE `now_play`
-  ADD CONSTRAINT `fk_now_play_User` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_now_play_music` FOREIGN KEY (`music_id`) REFERENCES `music` (`music_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_now_play_User` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_now_play_music` FOREIGN KEY (`music_id`) REFERENCES `music` (`music_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 --
 -- 테이블의 제약사항 `playlist`
 --
 ALTER TABLE `playlist`
-  ADD CONSTRAINT `fk_playlist_User1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_playlist_User1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 --
 -- 테이블의 제약사항 `playlist_song`
 --
 ALTER TABLE `playlist_song`
-  ADD CONSTRAINT `fk_Playlist_song_Music` FOREIGN KEY (`music_id`) REFERENCES `music` (`music_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_Playlist_song_Playlist` FOREIGN KEY (`playlist_id`) REFERENCES `playlist` (`playlist_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_Playlist_song_Music` FOREIGN KEY (`music_id`) REFERENCES `music` (`music_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_Playlist_song_Playlist` FOREIGN KEY (`playlist_id`) REFERENCES `playlist` (`playlist_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 --
 -- 테이블의 제약사항 `top_chart`
 --
 ALTER TABLE `top_chart`
-  ADD CONSTRAINT `fk_top_chart_music1` FOREIGN KEY (`music_id`) REFERENCES `music` (`music_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_top_chart_music1` FOREIGN KEY (`music_id`) REFERENCES `music` (`music_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 --
 -- 테이블의 제약사항 `user`
 --
 ALTER TABLE `user`
-  ADD CONSTRAINT `fk_User_Pass1` FOREIGN KEY (`pass_id`) REFERENCES `pass` (`pass_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_User_Pass1` FOREIGN KEY (`pass_id`) REFERENCES `pass` (`pass_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

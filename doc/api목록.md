@@ -1,0 +1,138 @@
+# API
+
+- DTO
+  - Playlist : playlist , playlist_song , music
+    - String playlist_id
+    - String user_id
+    - String playlist_name
+    - List\<Music> list
+  - SearchResult
+    - String search
+    - String target : 곡 , 앨범 , 아티스트
+    - List\<Music> result
+  - Music
+    - music_id
+    - music_title
+    - artist_name
+    - album_name
+    - album_image_url
+    - streaming_count
+    - lyrics
+- 플레이리스트
+  - void addMusicAtPlaylistByPlaylistId(String playlistId, String musicId)
+  - void removeMusicAtPlaylistByPlaylistId(String playlistId, String musicId)
+
+- 현재 플레이리스트
+  - void addMusicAtCurrentPlaylist(String userId, String musicId)
+  - void removeMusicAtCurrentPlaylist(String userId, String musicId)
+  - Playlist getCurrentPlaylistByUserId(String userId) 
+  - List\<CurrentPlaylist> getPlaylistByUserId(String Id)
+
+- Music
+  - Music getMusicById(String musicId)
+  - List\<SearchResult> getSearchResult(String search)
+- top chart
+  - List\<Music> getTopChart()
+- 필요한 함수
+  - 검색
+    - SearchResult searchMusic
+  - 플레이리스트
+    - List\<Playlist> getPlaylistByUserId(String userId)
+    - 플레이리스트 추가
+    - 플레이리스트 삭제
+    - void addPlaylist(String playlistName , String userId)
+    - void addMusicAtPlaylist(String musicId , String userId , int playlistId)
+  - 현재 플레이리스트
+    - Playlist getCurrentPlaylistByUserId(String userId)
+    - void addMusicAtCurrentPlaylist(String userId , int musicId)
+  - 음원차트
+    - List\<Music> getTopChart()
+  - 내부
+    - Music getMusicListByMusicId(int musicId)
+- 모델
+  - Music : ok
+    - music_id
+    - music_title
+    - artist_name
+    - album_name
+    - album_image_url
+    - streaming_count
+    - lyrics
+  - Playlist
+    - String playlist_id
+    - String user_id
+    - String playlist_name
+    - List\<Music> list
+  - SearchResult
+    - String search
+    - String target : 곡 , 앨범 , 아티스트
+    - List\<Music> result
+
+
+
+
+
+## API
+
+- MusicService
+  - Playlist
+    - [x] getPlaylistListByUserId
+    - [x] addPlaylist
+    - [x] deletePlaylist
+    - [x] addMusicAtPlaylist
+    - [x] removeMusicAtPlaylist
+  - Current
+    - [x] getCurrentPlaylistByUserId 
+    - [x] addMusicAtCurrentPlaylist
+  - Search
+    - [x] search
+  - TopChart
+    - [x] getTopChart
+    - [x] addTopChart
+    - [x] deleteTopChart
+- API
+  - [ ] Music
+    - [x] 목록 보기
+    - [x] 추가
+    - [x] 삭제
+    - [x] 변경
+    - [x] 스트리밍 추가
+  - [ ]  MusicArtist
+    - [x] 목록 보기
+    - [x] 추가
+    - [x] 삭제
+    - [x] 변경
+    - [x] 작가 추가
+  - [ ] Album
+    - [x] 목록 보기
+    - [x] 추가 
+    - [x] 삭제
+    - [x] 변경
+  - [ ] Artist
+    - [x] 목록 보기
+    - [x] 추가
+    - [x] 삭제
+    - [x] 변경
+  - [ ] Playlist
+    - [x] 목록 보기
+    - [x] 유저 ID로 가져오기
+    - [x] 추가
+    - [x] 삭제
+    - [x] 변경
+  - [ ] Playlist_songs
+    - [x] 목록 보기
+    - [x] Playlist ID로 가져오기
+    - [x] 추가
+    - [x] 삭제
+    - [x] 변경
+  - [ ] Current
+    - [x] 목록 보기
+    - [x] 유저 iD로 가져오기
+    - [x] 추가
+    - [x] 삭제
+  - [ ] TopChart
+    - 목록 보기
+    - 추가
+    - 삭제
+  - [ ] Search
+    - 검색
