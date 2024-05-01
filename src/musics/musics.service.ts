@@ -138,7 +138,7 @@ export class MusicsService {
     return musics.map((music)=>MusicDto.fromAttributes(music));
   }
   
-  async findMusicDtoByArtistId(artistId : number){
+  async findDtoByArtistId(artistId : number){
     const musics = await this.musicRepository.createQueryBuilder("music")
         .leftJoinAndSelect("music.album", "album")
         .leftJoinAndSelect("music.artists", "artists") 

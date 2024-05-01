@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, BadRequestException } from '@nestjs/common';
 import { MusicsService } from './musics.service';
 import { CreateMusicDto } from './dto/create-music.dto';
 import { UpdateMusicDto } from './dto/update-music.dto';
@@ -8,40 +8,31 @@ import { get } from 'http';
 export class MusicsController {
   constructor(private readonly musicsService: MusicsService) {}
 
-  //#. getAll
-  @Get()
-  getAll() {
-    return this.musicsService.getAll();
-  }
-
-  @Get('/extend')
+  
+  @Get('/all')
   getAllDto() {
     return this.musicsService.getAllDto();
   }
 
-  //#. findByMusicId  
-  @Get(':id')
-  findByMusicId(@Param('id') id: string) {
-    return this.musicsService.findByMusicId(+id);
+  @Get()
+  findDto(@Query('title') title: string, @Query('artist_id') artistId: string){
+    if (title && artistId) {
+      throw new BadRequestException('Cannot search by both title and artist_id at the same time.');
+    } else if (title) {
+      return this.musicsService.findDtoByTitle(title);
+    } else if (artistId) {
+      return this.musicsService.findDtoByArtistId(+artistId);
+    } else {
+      throw new BadRequestException('No search criteria provided. Please specify a title or an artist_id.');
+    }
   }
+ 
 
-  @Get('extend/:id')
+  @Get(':id')
   findDtoByMusicId(@Param('id') id: string) {
     return this.musicsService.findDtoByMusicId(+id);
   }
-  
-  //#. findByTitle
-  @Get('title/:title')
-  async findByTitle(@Param('title') title: string){
-    return this.musicsService.findByTitle(title);
-    //return title;
-  }
 
-  @Get('title/extend/:title')
-  async findDtoByTitle(@Param('title') title: string){
-    return this.musicsService.findDtoByTitle(title);
-    //return title;
-  }
 
   //#. add 
   @Post()
@@ -66,10 +57,31 @@ export class MusicsController {
     return this.musicsService.incrementStreamingCount(+music_id);
   }
 
-  @Get('extend/artist/:id')
-  findByArtistId(@Param('id') artistId: string) {
-    return this.musicsService.findMusicDtoByArtistId(+artistId);
-  }
+  
+  //#. getAll
+  // @Get()
+  // getAll() {
+  //   return this.musicsService.getAll();
+  // }   
+
+  //#. findByMusicId  
+  // @Get(':id')
+  // findByMusicId(@Param('id') id: string) {
+  //   return this.musicsService.findByMusicId(+id);
+  // }
+
+    //#. findByTitle
+  // @Get('')
+  // async findByTitle(@Query('title') title: string){
+  //   return this.musicsService.findByTitle(title);
+  //   //return title;
+  // }
+
+
+  // @Get('')
+  // findByArtistId(@Param('id') artistId: string) {
+  //   return this.musicsService.findDtoByArtistId(+artistId);
+  // }
 
   //#. artist
   // @Get('artist')
