@@ -52,7 +52,6 @@ export class AuthController {
   @Post('/refresh')
   @UseGuards(RefreshJwtGuard)
   refresh(@Req() req: Request): any { 
-      console.log("isAuthenticated");
       const user: any = req.user;
       return user;
   }
