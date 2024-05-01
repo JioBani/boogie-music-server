@@ -7,6 +7,12 @@ import { UpdateAlbumDto } from './dto/update-album.dto';
 export class AlbumsController {
   constructor(private readonly albumsService: AlbumsService) {}
   
+  //#. getAll
+  @Get('/all')
+  getAll() {
+    return this.albumsService.getAll();
+  }   
+
   //#. findDtoById
   @Get(':id')
   findExtendbyId(@Param('id') id: string) {
@@ -35,11 +41,5 @@ export class AlbumsController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.albumsService.remove(+id);
-  }  
-
-  //#. getAll
-  @Get()
-  getAll() {
-    return this.albumsService.getAll();
   }   
 }
