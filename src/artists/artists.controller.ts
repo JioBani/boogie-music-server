@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { ArtistsService } from './artists.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
@@ -7,40 +7,21 @@ import { UpdateArtistDto } from './dto/update-artist.dto';
 export class ArtistsController {
   constructor(private readonly artistsService: ArtistsService) {}
 
-
-    
-  //#. getAll
-  @Get()
-  getAll() {
-    return this.artistsService.getAll();
-  }
-
-  @Get('extend/')
+  @Get('/all')
   getAllDto() {
     return this.artistsService.getAllDto();
   }
 
-  //#. findById
-  @Get(':id')
-  findById(@Param('id') id: string) {
-    return this.artistsService.findById(+id);
-  }
-
-  //#. findById
-  @Get('title/:title')
-  findExtendByTitle(@Param('title') title: string) {
-    console.log("title" + title);
+  @Get()
+  findDtoByTitle(@Query('title') title: string) {
     return this.artistsService.findDtoByTitle(title);
   }
   
 
-  //#. findById
-  @Get('extend/:id')
-  findExtendById(@Param('id') id: string) {
+  @Get(':id')
+  findDtoById(@Param('id') id: string) {
     return this.artistsService.findDtoById(+id);
-  }
-
-
+  } 
 
   //#. create
   @Post()
@@ -59,4 +40,20 @@ export class ArtistsController {
   remove(@Param('id') id: string) {
     return this.artistsService.remove(+id);
   }
+
+ 
+    
+  //#. getAll
+  // @Get()
+  // getAll() {
+  //   return this.artistsService.getAll();
+  // }
+
+ 
+  //#. findById
+  // @Get(':id')
+  // findById(@Param('id') id: string) {
+  //   return this.artistsService.findById(+id);
+  // }
+
 }
