@@ -11,29 +11,14 @@ import { User } from 'src/domain/user.entity';
 @Controller('now-plays')
 export class NowPlaysController {
   constructor(private readonly nowPlaysService: NowPlaysService) {}
-  
-  //#. 조회
+ 
   @Get('all')
-  findAll() {
-    return this.nowPlaysService.getAll();
-  }
-
-  @Get('all/dto')
   findAllDto() {
     return this.nowPlaysService.getAllDto();
   }
 
   //#. user id로 찾기
   @Get('')
-  @UseGuards(JwtAuthGuard , RolesGuard)
-  @Roles("admin","user")
-  findByUserId(@Req() req: Request) {
-    const user : User = req.user as User;
-    return this.nowPlaysService.findByUserId(user.user_id);
-  }
-
-  //#. user id로 찾기
-  @Get('dto')
   @UseGuards(JwtAuthGuard , RolesGuard)
   @Roles("admin","user")
   findExtendByUserId(@Req() req: Request) {
@@ -59,4 +44,22 @@ export class NowPlaysController {
     const user : User = req.user as User;
     return this.nowPlaysService.remove(user.user_id ,music_id);
   } 
+
+   
+  //#. 조회
+  // @Get('all')
+  // findAll() {
+  //   return this.nowPlaysService.getAll();
+  // }
+
+  //#. user id로 찾기
+  // @Get('')
+  // @UseGuards(JwtAuthGuard , RolesGuard)
+  // @Roles("admin","user")
+  // findByUserId(@Req() req: Request) {
+  //   const user : User = req.user as User;
+  //   return this.nowPlaysService.findByUserId(user.user_id);
+  // }
+
+  
 }
