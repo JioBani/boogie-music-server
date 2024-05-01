@@ -14,6 +14,7 @@ export class PlaylistsController {
 
 
   //#. get all
+  //#. 디버그용
   @Get('/all')
   //@UseGuards(AuthGuard , RolesGuard)
   //@Roles("admin")
@@ -32,7 +33,7 @@ export class PlaylistsController {
 
 
   //#. get by playlist id
-  @Get('extend/:id')
+  @Get(':id')
   @UseGuards(JwtAuthGuard , RolesGuard)
   @Roles('user' , "admin")
   getPlaylistExtend(@Req() req: Request, @Param('id') id: string) {
@@ -40,13 +41,13 @@ export class PlaylistsController {
     return this.playlistsService.findDtoByPlaylistId(+id , user.user_id,true);
   }
 
-  //#. get by playlist id
-  @Get('extend')
+  //#. find by user
+  @Get()
   @UseGuards(JwtAuthGuard , RolesGuard)
   @Roles('user' , "admin")
-  getPlaylistExtendByUserId(@Req() req: Request) {
+  findDtoByUser(@Req() req: Request) {
     const user : User = req.user as User;
-    return this.playlistsService.findExtendByUserId(user.user_id);
+    return this.playlistsService.findDtoByUserId(user.user_id);
   }
 
   //#. create
