@@ -4,21 +4,13 @@ import { UpdatePlaylistDto } from './dto/update-playlist.dto';
 import { Playlist } from 'src/domain/playlist.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { PlaylistSong } from 'src/domain/playlist_song.entity';
-import { MusicsService } from 'src/musics/musics.service';
-import { MusicDto } from 'src/musics/dto/music.dto';
 import { PlaylistDto } from './dto/playlist.dto';
-import { PlaylistSongsService } from 'src/playlist_songs/playlist_songs.service';
 
 @Injectable()
 export class PlaylistsService {
   constructor(
     @InjectRepository(Playlist)
-    private playlistRepository : Repository<Playlist>,
-
-    private playlistSongsService : PlaylistSongsService,
-    
-    private musicsService : MusicsService
+    private playlistRepository : Repository<Playlist>    
   ){}
 
   //#. 전체 플레이리스트
@@ -68,23 +60,13 @@ export class PlaylistsService {
     return PlaylistDto.fromPlaylist(playlist);
   }
 
-  // //#. 플레이리스트 extend를 Playlist로 찾기
-  // private async findExtendByPlaylist(playlist : Playlist){
-  //   var playlistSongs : PlaylistSong[] = await this.playlistSongsService.findByPlaylistId(playlist.playlist_id);
-    
-  //   var musics : MusicDto[] = await Promise.all(
-  //     playlistSongs.map(async (songs) => {return this.musicsService.findDtoByMusicId(songs.music_id)})
-  //   );
-  //   return new PlaylistDto(playlist , musics);
-  // }
-
    //#. 유저 id로 플레이리스트 찾기
   async findByUserId(userId : string) : Promise<Playlist[]> {
     return await this.playlistRepository.find({where : {user_id : userId}})
   }
 
-  //#. 유저 id로 PlaylistExtend 가쟈오기
-  async findExtendByUserId(user_id : string) : Promise<PlaylistDto[]> {
+  //#. 유저 id로 PlaylistDto 찾기
+  async findDtoByUserId(user_id : string) : Promise<PlaylistDto[]> {
 
     const playlists : Playlist[] = await this.playlistRepository.createQueryBuilder("playlist")
       .leftJoinAndSelect("playlist.songs", "playlistSong")
