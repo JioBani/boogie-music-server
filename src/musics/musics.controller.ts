@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestj
 import { MusicsService } from './musics.service';
 import { CreateMusicDto } from './dto/create-music.dto';
 import { UpdateMusicDto } from './dto/update-music.dto';
-import { GetMusicDTO } from './dto/get-music.dto';
+import { get } from 'http';
 
 @Controller('musics')
 export class MusicsController {
@@ -14,9 +14,9 @@ export class MusicsController {
     return this.musicsService.getAll();
   }
 
-  @Get('extend/')
-  getAllByExtend() {
-    return this.musicsService.getAllExtend();
+  @Get('/extend')
+  getAllDto() {
+    return this.musicsService.getAllDto();
   }
 
   //#. findByMusicId  
@@ -26,8 +26,8 @@ export class MusicsController {
   }
 
   @Get('extend/:id')
-  findByMusicIdExtend(@Param('id') id: string) {
-    return this.musicsService.findByMusicIdExtend(+id);
+  findDtoByMusicId(@Param('id') id: string) {
+    return this.musicsService.findDtoByMusicId(+id);
   }
   
   //#. findByTitle
@@ -38,8 +38,8 @@ export class MusicsController {
   }
 
   @Get('title/extend/:title')
-  async findByTitleExtend(@Param('title') title: string){
-    return this.musicsService.findByTitleExtend(title);
+  async findDtoByTitle(@Param('title') title: string){
+    return this.musicsService.findDtoByTitle(title);
     //return title;
   }
 
@@ -61,15 +61,21 @@ export class MusicsController {
     return this.musicsService.remove(+id);
   }
 
-  //#. artist
-  @Get('artist')
-  getArtsits(@Query('music_id') music_id: string) {
-    return this.musicsService.getArtistsByMusicId(+music_id);
-    //return title;
-  }
-  
   @Post('streaming/:music_id')
   incrementStreamingCount(@Param('music_id') music_id: string) {
     return this.musicsService.incrementStreamingCount(+music_id);
   }
+
+  @Get('extend/artist/:id')
+  findByArtistId(@Param('id') artistId: string) {
+    return this.musicsService.findMusicDtoByArtistId(+artistId);
+  }
+
+  //#. artist
+  // @Get('artist')
+  // getArtsits(@Query('music_id') music_id: string) {
+  //   return this.musicsService.getArtistsByMusicId(+music_id);
+  //   //return title;
+  // }  
+
 }

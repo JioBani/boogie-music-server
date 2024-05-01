@@ -1,14 +1,13 @@
-import { Music } from "src/domain/music.entity";
 import { NowPlay } from "./now-play.entity";
-import { ExtendMusicDto } from "src/musics/dto/extend-music.dto";
+import { MusicDto } from "src/musics/dto/music.dto";
 
-export class NowPlayExtend {  
-  user_id: string;
-  musics : ExtendMusicDto[];
+export class NowPlayDto {  
+  nowPlay : NowPlay;
+  musicDto : MusicDto;
 
-  constructor(user_id : string , musics : ExtendMusicDto[]){
-    this.user_id = user_id;
-    this.musics = musics;
+  constructor(nowPlay : NowPlay, musicDto : MusicDto){
+      this.nowPlay = nowPlay;
+      this.musicDto = musicDto;
   }
 
   // static fromNowPlayList(userId : string , nowPlays : NowPlay[]) : NowPlayExtend{

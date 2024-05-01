@@ -263,24 +263,23 @@ INSERT INTO `top_chart` (`ranking`, `music_id`) VALUES
 CREATE TABLE `user` (
   `user_id` varchar(256) NOT NULL,
   `user_pw` varchar(256) NOT NULL,
-  `user_name` varchar(256) NOT NULL,
-  `user_birth` date NOT NULL,
-  `user_sex` tinyint(1) NOT NULL,
-  `paymentDay` datetime(6) DEFAULT NULL,
-  `ch_autoPay` tinyint(1) DEFAULT NULL,
-  `pass_id` int(11) NOT NULL
+  `user_name` varchar(512) NOT NULL,
+  `refresh_token` varchar(512),
+  `role` varchar(32) NOT NULL DEFAULT 'user';
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- 테이블의 덤프 데이터 `user`
 --
 
-INSERT INTO `user` (`user_id`, `user_pw`, `user_name`, `user_birth`, `user_sex`, `paymentDay`, `ch_autoPay`, `pass_id`) VALUES
-('user01', 'password01', 'User One', '2000-01-01', 0, NULL, NULL, 1),
-('user02', 'password02', 'User Two', '2000-01-01', 0, NULL, NULL, 2),
-('user03', 'password03', 'User Three', '2000-01-01', 0, NULL, NULL, 3);
-
+-- 덤프된 테이블의 인덱스
 --
+
+-- --------------------------------------------------------
+--
+-- 테이블의 덤프 데이터 `user`
+--
+
 -- 덤프된 테이블의 인덱스
 --
 
@@ -446,8 +445,7 @@ ALTER TABLE `top_chart`
 --
 -- 테이블의 제약사항 `user`
 --
-ALTER TABLE `user`
-  ADD CONSTRAINT `fk_User_Pass1` FOREIGN KEY (`pass_id`) REFERENCES `pass` (`pass_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

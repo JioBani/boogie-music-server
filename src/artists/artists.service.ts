@@ -1,24 +1,38 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Artist } from 'src/domain/artist.entity';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { MusicsService } from 'src/musics/musics.service';
-import { ExtendMusicDto } from 'src/musics/dto/extend-music.dto';
-import { ArtistExtend } from 'src/domain/artist.extend.entity';
+import { MusicDto } from 'src/musics/dto/music.dto';
+import { ArtistDto } from 'src/domain/artist.dto';
 
 @Injectable()
 export class ArtistsService {
   constructor(
     @InjectRepository(Artist)
     private artistRepository : Repository<Artist>,
+
     private musicService : MusicsService
+
+    
   ){}
 
   //#. getAll
   async getAll() : Promise<Artist[]> {
-    return await this.artistRepository.find();
+    return await this.artistRepository.find({
+      relations : {
+        musics : true
+      }
+    });
+  }
+
+  //#. getAll
+  async getAllDto() : Promise<ArtistDto[]> {     
+    return (await this.artistRepository.find({
+      relations : ["musics" , "musics.artists","musics.album"]
+    })).map(e=>ArtistDto.fromArtist(e));
   }
 
   //#. findById
@@ -30,33 +44,96 @@ export class ArtistsService {
     });
   }
 
-  async findExtendById(id: number) : Promise<ArtistExtend> {
-    var artists : Artist[] = await this.artistRepository.find({
+  async findDtoById(id: number) : Promise<ArtistDto> {
+    
+    const artist : Artist = await this.artistRepository.findOne({
       where : {
         artist_id : id
-      }
+      },
+      relations : ["musics" , "musics.artists","musics.album"]
     });
 
-    var artist : Artist = await this.findById(id);
-    var musics : ExtendMusicDto[] = await this.musicService.getExtendMsuicFromArtistId(id);
+    if(!artist){
+      throw new NotFoundException(`Artist with ID ${id} not found.`);
+    }
+    
+    return ArtistDto.fromArtist(artist);
+  }
 
-    return new ArtistExtend(artist, musics);
+  //#. findDtoByTitle
+  async findByTitle(title: string) : Promise<Artist[]> {
+    return await this.artistRepository.find({
+      where : {
+        artist_name : Like(`%${title}%`),
+      },
+    })
+  }
+  
+
+  //#. findDtoByTitle
+  async findDtoByTitle(title: string) : Promise<ArtistDto[]> {
+    return (await this.artistRepository.find({
+      where : {
+        artist_name : Like(`%${title}%`),
+      },
+      relations : ["musics" , "musics.artists","musics.album"]
+    })).map(e=>ArtistDto.fromArtist(e));
   }
 
 
   //#. create
-  async create(createArtistDto: CreateArtistDto) {
-    return await this.artistRepository.insert(createArtistDto);
+  create(createArtistDto: CreateArtistDto) {
+    return this.artistRepository.insert(createArtistDto);
   }
 
 
   //#. update
-  async update(id: number, updateArtistDto: UpdateArtistDto) {
-    return this.artistRepository.createQueryBuilder().where(`artist_id = ${id}`).update(updateArtistDto).execute();
+  update(id: number, updateArtistDto: UpdateArtistDto) {
+    return this.artistRepository.createQueryBuilder()
+      .where('artist_id = :artistId',{artistId : id})
+      .update(updateArtistDto)
+      .execute();
   }
 
   //#. delete
   remove(id: number) {
-    return this.artistRepository.createQueryBuilder().where(`artist_id = ${id}`).delete().execute();
+    return this.artistRepository
+      .createQueryBuilder()
+      .where('artist_id = :artistId',{artistId : id})
+      .delete()
+      .execute();
   }
+
+  // async findMusicDtoByArtist(artist : Artist){
+
+  //   var musics : Music[] = await this.musicRepository.createQueryBuilder("music")
+  //     .leftJoinAndSelect("music.album", "album")
+  //     .leftJoinAndSelect("music.artists", "artists")
+  //     .getMany();
+        
+  //   this.musicArtistRepository.find({
+  //     where : {
+  //       artist_id : artist.artist_id
+  //     },
+  //     relations : ["musics", "musics.artists"]
+  //   });
+
+  //   // music_artist 에서
+  //   // mssic_artist.artist_id = music.artist_id인 애들
+  //   // 을 artist 테이블이랑 조인
+  //   // 을 album 테이블이랑 조인
+  // }
+
+  // //#. findByTitleExtend
+  // async findDtoByTitle(title: string) : Promise<MusicDto[]> {
+  //   var musics : Music[] = await this.musicRepository.createQueryBuilder("music")
+  //       .leftJoinAndSelect("music.album", "album")
+  //       .leftJoinAndSelect("music.artists", "artists")
+  //       .where("music.music_title LIKE :title", { title: `%${title}%` })
+  //       .getMany();
+
+  //   return musics.map(music => MusicDto.fromAttributes(music));
+  // }
+
+
 }

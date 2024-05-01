@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { PlaylistSong } from "./playlist_song.entity";
 
 @Entity()
 export class Playlist {
@@ -10,5 +11,8 @@ export class Playlist {
 
   @Column({ length: 256 })
   playlist_name: string;
+
+  @OneToMany(() => PlaylistSong, playlistSong => playlistSong.playlist)
+  songs: PlaylistSong[];
 }
 

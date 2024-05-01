@@ -7,6 +7,7 @@ import { UpdateAlbumDto } from './dto/update-album.dto';
 export class AlbumsController {
   constructor(private readonly albumsService: AlbumsService) {}
   
+  
   //#. getAll
   @Get()
   getAll() {
@@ -22,8 +23,16 @@ export class AlbumsController {
   //#. findById
   @Get('extend/:id')
   findExtendbyId(@Param('id') id: string) {
-    return this.albumsService.findExtendById(+id);
+    return this.albumsService.findDtoById(+id);
   }
+
+  //#. findById
+  @Get('title/extend/:title')
+  findExtendbyTitle(@Param('title') title: string) {
+    console.log(title)
+    return this.albumsService.findDtoByTitle(title);
+  }
+
 
   //#. create
   @Post()

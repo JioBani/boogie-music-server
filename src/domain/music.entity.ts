@@ -1,5 +1,6 @@
 import { Album } from 'src/domain/album.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, ManyToMany, JoinTable} from 'typeorm';
+import { Artist } from './artist.entity';
 
 @Entity()
 export class Music {
@@ -21,4 +22,12 @@ export class Music {
   @ManyToOne(() => Album)
   @JoinColumn({ name: 'album_id' })
   album: Album;
+
+  @ManyToMany(() => Artist)
+  @JoinTable({
+    name: 'music_artist',
+    joinColumn: { name: 'music_id', referencedColumnName: 'music_id' },
+    inverseJoinColumn: { name: 'artist_id', referencedColumnName: 'artist_id' }
+  })
+  artists: Artist[];
 }

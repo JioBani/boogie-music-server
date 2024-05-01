@@ -12,7 +12,7 @@ function ormConfig(): TypeOrmModuleOptions {
         name: 'default',
         type: 'mysql',
         database: 'boogie_music',
-        host: 'localhost',
+        host: 'mysql-container',
         port: Number(3306),
         username: 'root',
         password: '1234',

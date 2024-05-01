@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Music } from './music.entity';
 
 @Entity()
 export class Album {
@@ -10,4 +11,7 @@ export class Album {
 
   @Column({ length: 256, nullable: true })
   album_image_url: string;
+
+  @OneToMany(() => Music, music => music.album)
+  musics: Music[];
 }

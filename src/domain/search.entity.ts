@@ -1,4 +1,4 @@
-import { ExtendMusicDto } from "src/musics/dto/extend-music.dto";
+import { MusicDto } from "src/musics/dto/music.dto";
 import { Album } from "./album.entity";
 import { Artist } from "./artist.entity";
 
@@ -6,7 +6,7 @@ export class SearchResult {
 
   constructor(
     searchText : string,
-    musics : ExtendMusicDto[],
+    musics : MusicDto[],
     albums : Album[],
     artists : Artist[],
   ){
@@ -17,7 +17,7 @@ export class SearchResult {
   }
 
   searchText : string;
-  musics : ExtendMusicDto[];
+  musics : MusicDto[];
   albums : Album[];
   artists : Artist[];
 }

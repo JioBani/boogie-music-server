@@ -47,24 +47,6 @@ export class MusicArtistService {
     });    
   }
 
-  //#. findByMusicId
-  async findByMusicId(id: number) {
-    return await this.musicArtistRepository.find({
-      where : {
-        music_id : id
-      }
-    });
-  }
-
-  //#. findByArtistId
-  async findByArtistId(id: number) {
-    return await this.musicArtistRepository.find({
-      where : {
-        artist_id : id
-      }
-    });
-  }
-
   //#. add
   async create(createMusicArtistDto: CreateMusicArtistDto) {
     return await this.musicArtistRepository.insert(createMusicArtistDto);  
@@ -73,8 +55,8 @@ export class MusicArtistService {
   //# delete
   async remove(musid_id: number, artist_id : number,) {
     return await this.musicArtistRepository.createQueryBuilder()
-      .where(`music_id = ${musid_id}`)
-      .andWhere(`artist_id = ${artist_id}`)
+      .where(`music_id = :music_id `, {musid_id})
+      .andWhere(`artist_id = :artist_id`,{artist_id})
       .delete()
       .execute();
   }

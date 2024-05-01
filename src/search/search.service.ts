@@ -1,43 +1,31 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { AlbumsService } from 'src/albums/albums.service';
+import { ArtistsService } from 'src/artists/artists.service';
 import { Album } from 'src/domain/album.entity';
 import { Artist } from 'src/domain/artist.entity';
-import { Music } from 'src/domain/music.entity';
 import { SearchResult } from 'src/domain/search.entity';
+import { MusicDto } from 'src/musics/dto/music.dto';
 import { MusicsService } from 'src/musics/musics.service';
-import { Repository } from 'typeorm';
 
 @Injectable()
 export class SearchService {
     constructor(
-        @InjectRepository(Music)
-        private musicRepository : Repository<Music>,
-
-        @InjectRepository(Album)
-        private albumRepository : Repository<Album>,
-
-        @InjectRepository(Artist)
-        private artistRepository : Repository<Artist>,
-
         private musicSerivce : MusicsService,
+        private albumsService : AlbumsService,
+        private artistsService : ArtistsService
       ){}
       
     async getSearchResult(text : string){
-       var musics = await this.musicRepository.createQueryBuilder().where(`music_title LIKE '%${text}%'`).getMany();
-       var musicExtends = await Promise.all(musics.map((e)=>{return this.musicSerivce.getExtendMusicDto(e)}));
+      var musics : MusicDto[]
+      var artists : Artist[] 
+      var albums : Album[]
+      
+      await Promise.all([
+         musics = await this.musicSerivce.findDtoByTitle(text),
+         artists = await this.artistsService.findByTitle(text),
+         albums = await this.albumsService.findByTitle(text),
+      ])
 
-       var albums = await this.albumRepository.createQueryBuilder().where(`album_title LIKE '%${text}%'`).getMany();
-       var artists = await this.artistRepository.createQueryBuilder().where(`artist_name LIKE '%${text}%'`).getMany();
-
-       return new SearchResult(text , musicExtends , albums , artists);
-       
+      return new SearchResult(text , musics , albums , artists);       
     }
-
-   //  async getSearchResultExtend(text : string){
-   //    var musics = await this.musicRepository.createQueryBuilder().where(`music_title LIKE '%${text}%'`).getMany();
-   //    var albums = await this.albumRepository.createQueryBuilder().where(`album_title LIKE '%${text}%'`).getMany();
-   //    var artists = await this.artistRepository.createQueryBuilder().where(`artist_name LIKE '%${text}%'`).getMany();
-   //       return new SearchResult(text , musics , albums , artists);
-   // }
-
 }

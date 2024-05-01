@@ -7,10 +7,17 @@ import { UpdateArtistDto } from './dto/update-artist.dto';
 export class ArtistsController {
   constructor(private readonly artistsService: ArtistsService) {}
 
+
+    
   //#. getAll
   @Get()
   getAll() {
     return this.artistsService.getAll();
+  }
+
+  @Get('extend/')
+  getAllDto() {
+    return this.artistsService.getAllDto();
   }
 
   //#. findById
@@ -20,10 +27,19 @@ export class ArtistsController {
   }
 
   //#. findById
+  @Get('title/:title')
+  findExtendByTitle(@Param('title') title: string) {
+    console.log("title" + title);
+    return this.artistsService.findDtoByTitle(title);
+  }
+  
+
+  //#. findById
   @Get('extend/:id')
   findExtendById(@Param('id') id: string) {
-    return this.artistsService.findExtendById(+id);
+    return this.artistsService.findDtoById(+id);
   }
+
 
 
   //#. create

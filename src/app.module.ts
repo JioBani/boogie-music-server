@@ -18,6 +18,8 @@ import { NowPlay } from './domain/now-play.entity';
 import { TopChartsModule } from './top-charts/top-charts.module';
 import { SearchModule } from './search/search.module';
 import { MusicArtistModule } from './music_artist/music_artist.module';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -31,7 +33,9 @@ import { MusicArtistModule } from './music_artist/music_artist.module';
     NowPlaysModule,
     TopChartsModule,
     SearchModule,
-    MusicArtistModule, 
+    MusicArtistModule,
+    AuthModule,
+    UsersModule, 
   ],
   controllers: [AppController],
   providers: [AppService],
