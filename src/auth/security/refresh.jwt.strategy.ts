@@ -16,10 +16,9 @@ export class RtStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
   }
 
   async validate(req: Request,payload: Payload, done: VerifiedCallback) {
-    console.log("validate")
     const refreshToken = req.get('authorization').split('Bearer ')[1];
 
-    const user = await this.authService.checkRefreshToken(refreshToken , payload);
+    const user = await this.authService.vaildateRefreshToken(refreshToken , payload);
 
     if(!user) {
         throw new UnauthorizedException({

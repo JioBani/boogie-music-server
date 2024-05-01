@@ -27,7 +27,7 @@ export class AuthService {
 
     async registerUser(newUser: CreateUserDto){
 
-        this.validateUserInput(newUser);
+        this.validateCreateUserDto(newUser);
 
         let userFind: User = await this.userRepository.findOne({
             where : {user_id : newUser.user_id},
@@ -42,7 +42,7 @@ export class AuthService {
         return this.userRepository.insert(newUser);
     }
 
-    validateUserInput(user : CreateUserDto) {
+    validateCreateUserDto(user : CreateUserDto) {
         if (user.user_id.length < 8) {
           throw new RegistrationValidationException('아이디는 8자리 이상이어야 합니다.');
         }
@@ -66,19 +66,22 @@ export class AuthService {
         if (!this.isValidPassword(user.user_pw)) {
           throw new RegistrationValidationException('비밀번호는 대소문자 영문, 숫자, 특수문자 !@#$%~_-만 사용할 수 있습니다.');
         }
-      }
+    } 
     
-      private isValidUserId(username: string): boolean {
+    private isValidUserId(username: string): boolean {
+        //#. a~z , A~Z , 0~9
         return /^[a-zA-Z0-9]+$/.test(username);
-      }
-    
-      private isValidPassword(password: string): boolean {
+    }
+
+    private isValidPassword(password: string): boolean {
+        //#.;  a~z , A~Z , 0~9 , !@#$%~_-
         return /^[a-zA-Z0-9!@#$%~_\-]+$/.test(password);
-      }
-    
-      private isValidName(name: string): boolean {
+    }
+
+    private isValidName(name: string): boolean {
+        //#. a~z , A~Z , 한글
         return /^[a-zA-Z\uAC00-\uD7A3\s\-]+$/.test(name);
-      }
+    }
 
 
     async transformPassword(password: string): Promise<string> {
@@ -87,9 +90,10 @@ export class AuthService {
         );
     }
 
-
+    //#. 로그인
     async validateUser(userDto: ValidateUserDto): Promise<{accessToken: string , refreshToken : string} | undefined> {
 
+        //#. 유저가 있는지 확인
         let userFind: User = await this.userRepository.findOne({
             where : {
                 user_id : userDto.id
@@ -101,14 +105,18 @@ export class AuthService {
         }
         
 
+        //#. 비밀번호 대조
         const validatePassword = await bcrypt.compare(userDto.password, userFind.user_pw);
 
         if(!validatePassword) {
             throw new UnauthorizedException();
         }
+
+        //#. 토큰 발행
         const accessToken = await this.generateAcesssToken(userFind);
         const refreshToken = await this.generateRefreshToken(userFind);
 
+        //#. DB에 리프레시 토큰 기록
         await this.userRepository.update(userDto.id , {refresh_token : refreshToken})
 
         return {
@@ -117,7 +125,8 @@ export class AuthService {
         };
     }
 
-    async tokenValidateUser(payload: Payload): Promise<User | undefined> {
+    //#. 유저가 있는지 확인
+    async isUserExist(payload: Payload): Promise<User | undefined> {
         return await this.userRepository.findOne({
             where : {
                 user_id : payload.id
@@ -125,8 +134,9 @@ export class AuthService {
         });
     }
 
-    //#TODO :  페이로드 변조 확인하기
-    async checkRefreshToken(refreshToken : string , payload : Payload) : Promise<User>{
+   
+    //#. 리프레스 토큰 확인
+    async vaildateRefreshToken(refreshToken : string , payload : Payload) : Promise<User>{
         var user : User = await this.userRepository.findOne({
             where : {user_id : payload.id},
             select : ['user_id',"user_name","role",'refresh_token']
@@ -140,6 +150,7 @@ export class AuthService {
         }
     }
 
+    //#. 액세스 토큰 생성
     async generateAcesssToken(user : User){
         const payload: Payload = { 
             id : user.user_id,
@@ -150,12 +161,13 @@ export class AuthService {
         return this.jwtService.sign(
             payload,     
             {
-                secret : "JWT_SECRET",
+                secret : "JWT_SECRET", //TODO : 시크릿키 변경 및 환경변수화
                 expiresIn : "30s"
             }               
         );
     }
 
+    //#. 리프레시 토큰 생성
     async generateRefreshToken(user : User){
         const payload: Payload = { 
             id : user.user_id,
@@ -166,12 +178,13 @@ export class AuthService {
         return this.jwtService.sign(
             payload,     
             {
-                secret : "JWT_SECRET",
+                secret : "JWT_SECRET", //TODO : 시크릿키 변경 및 환경변수화
                 expiresIn : "24h"
             }           
         );
     }
 
+    //#. 리프레쉬 토큰으로 액세스 토큰 생성
     async generateAcesssTokenWithRefreshToken(refreshToken : string , user : User){
 
         const accessToken = await this.generateAcesssToken(user);
