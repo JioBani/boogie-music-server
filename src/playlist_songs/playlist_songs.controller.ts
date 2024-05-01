@@ -14,7 +14,7 @@ export class PlaylistSongsController {
   constructor(private readonly playlistSongsService: PlaylistSongsService) {}
 
   //#. 조회
-  @Get()
+  @Get('/all')
   @UseGuards(JwtAuthGuard , RolesGuard)
   @Roles("admin")
   getAll(@Req() req: Request) {
