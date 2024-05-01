@@ -32,7 +32,7 @@ export class MusicsService {
     });
   }
 
-  //#. getAllExtend
+  //#. getAllDto
   async getAllDto() : Promise<MusicDto[]> {
     var musics = await this.musicRepository.find({
       relations : {
@@ -55,7 +55,7 @@ export class MusicsService {
     }     
   }
 
-  //#. findByMusicExtend
+  //#. findDtoByMusicId
   async findDtoByMusicId(id: number) : Promise<MusicDto>{
     const result = await this.musicRepository.findOne({
       where : {music_id : id},
@@ -82,7 +82,7 @@ export class MusicsService {
       .getMany();
   }
 
-  //#. findByTitleExtend
+  //#. findDtoByTitle
   async findDtoByTitle(title: string) : Promise<MusicDto[]> {
     var musics : Music[] = await this.musicRepository.createQueryBuilder("music")
         .leftJoinAndSelect("music.album", "album")
@@ -91,34 +91,6 @@ export class MusicsService {
         .getMany();
 
     return musics.map(music => MusicDto.fromAttributes(music));
-  }
-
-  //#. create
-  create(createMusicDto: CreateMusicDto) {    
-    return this.musicRepository.insert(createMusicDto);
-  }
-
-  //#. update  
-  update(id: number, updateMusicDto: UpdateMusicDto) {
-    const result = this.musicRepository.createQueryBuilder()
-      .update(Music)
-      .set(updateMusicDto)
-      .where('id = :id', { id })
-      .execute();
-  }
-
-  //#. remove  
-  async remove(id: number) {
-    return await this.musicRepository.createQueryBuilder()
-      .delete()
-      .from(Music)
-      .where('id = :id', { id })
-      .execute();
-  } 
-
-  
-  async incrementStreamingCount(music_id: number){
-     return this.musicRepository.increment({ music_id }, 'streaming_count', 1);
   }
 
   findByAlbumId(id : number) : Promise<Music[]>{
@@ -150,77 +122,31 @@ export class MusicsService {
     return musics.map(music => MusicDto.fromAttributes(music));
   }
 
-  //------- 밑으로 삭제 가능성 있음
-
-  //#. getArtists
-  async getArtistsByMusicId(id : number) : Promise<Artist[]>{
-    return (await this.musicArtistRepository.find({
-      where : {
-        music_id : id
-      },
-      relations : {
-        artist : true
-      },
-    })).map((value) => {return value.artist});
+  //#. create
+  create(createMusicDto: CreateMusicDto) {    
+    return this.musicRepository.insert(createMusicDto);
   }
 
-  async getExtendMusicDto(music : Music) : Promise<MusicDto> {
-    const artists: Artist[] = await this.getArtistsByMusicId(music.music_id);
-    const album : Album = await this.albumRepository.findOne({
-      where : {
-        album_id : music.album_id
-      }
-    });
-
-    return new MusicDto(music , album , artists);
+  //#. update  
+  update(id: number, updateMusicDto: UpdateMusicDto) {
+    const result = this.musicRepository.createQueryBuilder()
+      .update(Music)
+      .set(updateMusicDto)
+      .where('id = :id', { id })
+      .execute();
   }
 
-  // async _getExtendMusicDto(musicId : number) : Promise<ExtendMusicDto> {
+  //#. remove  
+  async remove(id: number) {
+    return await this.musicRepository.createQueryBuilder()
+      .delete()
+      .from(Music)
+      .where('id = :id', { id })
+      .execute();
+  } 
 
-  //   var music : Music = await this.musicRepository.findOne({
-  //     relations : {
-  //       album : true,
-  //       artists : true
-  //     }
-  //   });
-
-  //   const album: Album =  music.album;
-  //   const artists: Artist[] =  music.artists;
-
-  //   // 이 부분을 추가하는것에 대한 고민
-  //   //music.album = undefined;
-  //   //music.artists = undefined; 
-
-  //   return new ExtendMusicDto(music , album, artists);
-  // }
-
-  async getExtendMusicFromMusics(musics : Music[]) : Promise<MusicDto[]>{
-    return await Promise.all(musics.map((music =>{
-      return this.getExtendMusicDto(music);
-    })))
+  //#. 스프리밍 카운트 증가
+  async incrementStreamingCount(music_id: number){
+     return this.musicRepository.increment({ music_id }, 'streaming_count', 1);
   }
-
-  async getExtendMusicFromMusicIds(ids : number[]) : Promise<MusicDto[]>{
-    return await Promise.all(ids.map((id =>{
-      return this.findDtoByMusicId(id);
-    })))
-  }
-
-  async getExtendMsuicFromArtistId(artistId : number) :  Promise<MusicDto[]>{
-      var musicArtist =  await this.musicArtistRepository.find({
-        where : {
-          artist_id : artistId,
-        },
-        relations : {
-          music : true,
-        }
-      });
-
-      return await this.getExtendMusicFromMusics(musicArtist.map(e => {return e.music}));     
-  }
-
-
-  
-
-
 }

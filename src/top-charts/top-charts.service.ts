@@ -19,15 +19,15 @@ export class TopChartsService {
   ){}
 
   //#. 조회
-  async getAll() {
-    var topcharts : TopChart[] = await this.topChartRepository.find({
-      order : {ranking : 'ASC'},
-      take : 10,
-      relations :{music : true}
-    })
+  // async getAll() {
+  //   var topcharts : TopChart[] = await this.topChartRepository.find({
+  //     order : {ranking : 'ASC'},
+  //     take : 10,
+  //     relations :{music : true}
+  //   })
 
-    return this.musicService.getExtendMusicFromMusics(topcharts.map((e)=>{return e.music}))
-  }
+  //   return this.musicService.getExtendMusicFromMusics(topcharts.map((e)=>{return e.music}))
+  // }
 
   //#. 조회
   async getAllDto() {

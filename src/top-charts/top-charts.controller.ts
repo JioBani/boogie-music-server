@@ -11,13 +11,13 @@ export class TopChartsController {
   constructor(private readonly topChartsService: TopChartsService) {}
 
   //#. 조회
-  @Get()
-  getAll() {
-    return this.topChartsService.getAll();
-  }
+  // @Get()
+  // getAll() {
+  //   return this.topChartsService.getAll();
+  // }
 
   //#. 조회
-  @Get('dto')
+  @Get()
   getAllDto() {
     return this.topChartsService.getAllDto();
   }
