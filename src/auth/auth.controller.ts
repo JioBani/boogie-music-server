@@ -49,13 +49,6 @@ export class AuthController {
       return res.json(jwt);
   } 
 
-  @Get()
-  get(){
-    return this.authService.get()
-  }
-
-
- 
   @Post('/refresh')
   @UseGuards(RefreshJwtGuard)
   refresh(@Req() req: Request): any { 
@@ -64,15 +57,9 @@ export class AuthController {
       return user;
   }
 
-
-
-
-  // //#. create
-  // @Post()
-  // @UseGuards(AuthGuard , RolesGuard)
-  // @Roles('user' , "admin")
-  // create(@Req() req: Request, @Body() createPlaylistDto: CreatePlaylistDto) {
-  //   const user : User = req.user as User;
-  //   return this.playlistsService.create(createPlaylistDto , user.user_id);
-  // }
+  //#. 디버그 용
+  @Get()
+  get(){
+    return this.authService.get()
+  }  
 }
