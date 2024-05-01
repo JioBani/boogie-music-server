@@ -9,12 +9,4 @@ export class NowPlayDto {
       this.nowPlay = nowPlay;
       this.musicDto = musicDto;
   }
-
-  // static fromNowPlayList(userId : string , nowPlays : NowPlay[]) : NowPlayExtend{
-  //   var musics : Music[] = [];
-  //   for(const nowPlay of nowPlays){
-  //       musics.push(nowPlay.music);
-  //   }
-  //   return new NowPlayExtend(userId , musics);
-  // }
 }
