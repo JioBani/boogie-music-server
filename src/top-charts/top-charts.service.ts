@@ -15,19 +15,8 @@ export class TopChartsService {
   constructor(
     @InjectRepository(TopChart)
     private topChartRepository : Repository<TopChart>,
-    private musicService : MusicsService,
   ){}
 
-  //#. 조회
-  // async getAll() {
-  //   var topcharts : TopChart[] = await this.topChartRepository.find({
-  //     order : {ranking : 'ASC'},
-  //     take : 10,
-  //     relations :{music : true}
-  //   })
-
-  //   return this.musicService.getExtendMusicFromMusics(topcharts.map((e)=>{return e.music}))
-  // }
 
   //#. 조회
   async getAllDto() {
