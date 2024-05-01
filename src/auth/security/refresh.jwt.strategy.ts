@@ -10,7 +10,7 @@ export class RtStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
   constructor(private authService: AuthService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: "JWT_SECRET",
+      secretOrKey: "JWT_SECRET", //TODO : 시크릿키 수정 및 환경변수화
       passReqToCallback: true,
     });
   }

@@ -22,7 +22,6 @@ export class AuthController {
   @Get('/authenticate')
   @UseGuards(JwtAuthGuard)
   isAuthenticated(@Req() req: Request): any { 
-      console.log("isAuthenticated");
       const user: any = req.user;
       return user;
   }
@@ -31,7 +30,6 @@ export class AuthController {
   @UseGuards(JwtAuthGuard , RolesGuard)
   @Roles('admin')
   isAdmin(@Req() req: Request): any { 
-      console.log("isAdmin");
       const user: any = req.user;
       return user;
   }
@@ -40,7 +38,6 @@ export class AuthController {
   @UseGuards(AuthGuard("jwt") , RolesGuard)
   @Roles('user' , "admin")
   isUser(@Req() req: Request): any { 
-      console.log("isUser");
       const user: any = req.user;
       return user;
   }

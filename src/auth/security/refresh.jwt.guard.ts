@@ -5,7 +5,6 @@ import { Observable } from "rxjs";
 @Injectable()
 export class RefreshJwtGuard extends NestAuthGuard('jwt-refresh') {
     canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
-        console.log("RefreshJwtGuard.canActivate()")
         return super.canActivate(context);
     }
 }
