@@ -13,7 +13,6 @@ export class AlbumsService {
     private albumRepository : Repository<Album>,
   ){}
 
-  //#. getAll
   getAll() {
     return this.albumRepository.find();
   }
@@ -26,7 +25,6 @@ export class AlbumsService {
     return albums.map((album)=>AlbumDto.fromAlbum(album)); 
   }
 
-  //#. findById
   async findById(id : number) {
     var result = await this.albumRepository.find(
       {
@@ -79,12 +77,10 @@ export class AlbumsService {
     })).map(e=>AlbumDto.fromAlbum(e));
   }
 
-  //#. create
   create(createAlbumDto: CreateAlbumDto) {
     return this.albumRepository.insert(createAlbumDto);
   }
 
-  //#. update
   update(id: number, updateAlbumDto: UpdateAlbumDto) {
     return this.albumRepository.createQueryBuilder()
     .where('album_id = :albumId',{albumId : id})
@@ -92,7 +88,6 @@ export class AlbumsService {
     .execute();
   }
 
-  //#. delete
   remove(id: number) {
     return this.albumRepository
       .createQueryBuilder()
