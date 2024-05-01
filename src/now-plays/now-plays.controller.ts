@@ -12,7 +12,7 @@ import { User } from 'src/domain/user.entity';
 export class NowPlaysController {
   constructor(private readonly nowPlaysService: NowPlaysService) {}
  
-  @Get('all')
+  @Get('/all')
   findAllDto() {
     return this.nowPlaysService.getAllDto();
   }
