@@ -91,6 +91,4 @@
 
 ## 🚗 시연
 
-
-
-<video src="README.assets/play.gif"></video>
+![play](README.assets/play.gif)
