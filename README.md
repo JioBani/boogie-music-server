@@ -93,4 +93,4 @@
 
 
 
-<video src="README.assets/play.mp4"></video>
+<video src="README.assets/play.gif"></video>
